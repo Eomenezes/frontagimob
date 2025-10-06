@@ -160,162 +160,93 @@ body {
 .cta-button { width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; color: var(--primary-white); background-color: var(--primary-green); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
 .cta-button:hover { background-color: #69C93A; }
 .cta-button img { width: 20px; height: 20px; }
-.calculator-results { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 730px; }
-.results-placeholder, .results-content { width: 100%; text-align: center; }
-.results-placeholder.active, .results-content.active { display: block; }
+.calculator-results { padding: 0; border: none; box-shadow: none; }
+.results-placeholder { text-align: center; border: 1px solid var(--border-color); border-radius: 24px; padding: 2rem; min-height: 500px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.results-placeholder.active { display: flex; }
 .results-placeholder, .results-content { display: none; }
 .results-placeholder img { width: 80px; height: 80px; margin-bottom: 1rem; }
 .results-placeholder h3 { font-size: 1.5rem; color: var(--dark-text); }
 .results-placeholder p { font-size: 1rem; }
-.results-comparison { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem; }
-.result-card { background-color: var(--light-blue-bg); padding: 1.5rem; border-radius: 8px; text-align: left; }
-.result-card h4 { color: var(--primary-blue); margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; }
-.result-card p { line-height: 1.8; }
-.result-card p strong { color: var(--dark-text); }
-.results-actions { display: flex; gap: 1rem; margin-top: 2rem; width: 100%; }
-.action-button { flex: 1; padding: 0.8rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; }
-.action-button.pdf { background-color: #e2e8f0; color: var(--dark-text); }
-.action-button.pdf:hover { background-color: #cbd5e1; }
-.action-button.email { background-color: var(--primary-green); color: var(--dark-text); }
-.action-button.email:hover { background-color: #69C93A; }
-.disclaimer { font-size: 0.8rem; text-align: center; margin-top: 2rem; }
+.results-content.active { display: block; }
+.results-comparison { display: flex; flex-direction: column; gap: 1.5rem; }
+.result-card { border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid var(--border-color); }
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; color: var(--primary-white); }
+.card-header.green { background-color: var(--primary-green); }
+.card-header.blue { background-color: var(--primary-blue); }
+.header-title { display: flex; align-items: center; gap: 0.75rem; font-size: 1.25rem; font-weight: 600; }
+.header-title small { display: block; font-size: 0.8rem; font-weight: 400; opacity: 0.9; }
+.header-title img { width: 24px; height: 24px; }
+.header-tax { text-align: right; font-size: 0.8rem; line-height: 1.4; }
+.card-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.info-row { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+.info-row.top-boxes { gap: 1rem; padding-bottom: 1rem; border-bottom: none; }
+.info-row.single { border-bottom: none; padding-bottom: 0; align-items: center; }
+.info-row.single > strong { margin-left: auto; font-size: 1.2rem; }
+.info-box { flex: 1; background-color: var(--light-blue-bg); padding: 1rem; border-radius: 12px; }
+.info-box label, .info-row label { font-size: 0.9rem; color: var(--light-text); display: flex; align-items: center; gap: 0.25rem; }
+.info-box strong, .info-row strong { display: block; font-size: 1.5rem; color: var(--dark-text); font-weight: 600; margin-top: 0.25rem; }
+.info-row strong.highlight { color: #D94632; }
+.income-analysis { background-color: var(--primary-white); border-radius: 8px; padding: 1rem; margin: 0.5rem 0; border: 1px solid var(--border-color); }
+.income-analysis h4 { font-size: 1rem; color: var(--dark-text); margin-bottom: 0.5rem; text-align: left; }
+.income-analysis-row { display: flex; justify-content: space-between; align-items: center; }
+.income-analysis-row span { color: var(--light-text); }
+.income-percent { font-weight: 600; font-size: 1.2rem; }
+.income-status-ok { color: #059669; font-weight: 500; font-size: 0.9rem; margin-top: 0.5rem; text-align: left; }
+.income-status-bad { color: #D94632; font-weight: 500; font-size: 0.9rem; margin-top: 0.5rem; text-align: left; }
+.view-table-btn { width: 100%; background: transparent; border: 1px solid var(--primary-blue); color: var(--primary-blue); padding: 0.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin-top: 0.5rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; }
+.view-table-btn:hover { background-color: var(--primary-blue); color: var(--primary-white); }
 
 
 /* --------------------------------------------------------------------------
-   [5.5] NOVA SEÇÃO: POR QUE ESCOLHER O SIMULADOR
+   [5.5] SEÇÃO: POR QUE ESCOLHER O SIMULADOR
    -------------------------------------------------------------------------- */
-.why-us {
-    padding: 80px 20px;
-    background-color: var(--primary-white);
-}
-.why-us .section-header .section-title span {
-    color: var(--primary-blue);
-}
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-}
-.feature-item {
-    text-align: center;
-}
-.feature-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    margin: 0 auto 1.5rem auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+.why-us { padding: 80px 20px; background-color: var(--primary-white); }
+.why-us .section-header .section-title span { color: var(--primary-blue); }
+.features-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+.feature-item { text-align: center; }
+.feature-icon { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 1.5rem auto; display: flex; justify-content: center; align-items: center; }
 .feature-icon.green-bg { background-color: var(--light-green-bg); }
 .feature-icon.blue-bg { background-color: var(--light-blue-bg); }
-.feature-icon img {
-    width: 32px;
-    height: 32px;
-}
-.feature-item h3 {
-    font-size: 1.25rem;
-    color: var(--dark-text);
-    margin-bottom: 0.5rem;
-}
-.feature-item p {
-    line-height: 1.6;
-}
+.feature-icon img { width: 32px; height: 32px; }
+.feature-item h3 { font-size: 1.25rem; color: var(--dark-text); margin-bottom: 0.5rem; }
+.feature-item p { line-height: 1.6; }
 
 
 /* --------------------------------------------------------------------------
    [6] SEÇÃO DE BENEFÍCIOS (NOVO DESIGN) - Fundo Azul
    -------------------------------------------------------------------------- */
-.benefits { 
-    padding: 80px 20px; 
-    background-color: var(--primary-blue); 
-}
-.benefits .section-title { 
-    color: var(--primary-white); 
-    text-align: center; 
-}
-.benefits .section-subtitle { 
-    color: #E0E0E0; 
-    text-align: center; 
-}
-.benefits-grid { 
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 3rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.benefit-card { 
-    background-color: var(--primary-white); 
-    padding: 1.5rem; 
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
-    transition: transform 0.3s ease;
-}
-.benefit-card:hover { 
-    transform: translateY(-5px); 
-}
-.benefit-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-.benefit-icon {
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    background-color: var(--primary-green);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.benefit-icon img {
-    width: 24px;
-    height: 24px;
-}
-.benefit-header h4 { 
-    font-size: 1.25rem; 
-    color: var(--dark-text); 
-}
-.benefit-card p { 
-    line-height: 1.7; 
-    padding-left: 54px;
-    color: var(--light-text);
-}
-.sub-benefit { 
-    margin-top: 1rem;
-    margin-left: 54px;
-    background-color: #EBF8F0;
-    border-left: 4px solid var(--primary-green);
-    padding: 0.8rem 1rem; 
-    border-radius: 0 8px 8px 0;
-}
-.sub-benefit p {
-    padding-left: 0;
-    font-size: 0.9rem;
-    color: #065F46;
-}
-.sub-benefit p strong {
-    color: #047857;
-}
+.benefits { padding: 80px 20px; background-color: var(--primary-blue); }
+.benefits .section-title { color: var(--primary-white); text-align: center; }
+.benefits .section-subtitle { color: #E0E0E0; text-align: center; }
+.benefits-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 3rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+.benefit-card { background-color: var(--primary-white); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease; }
+.benefit-card:hover { transform: translateY(-5px); }
+.benefit-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+.benefit-icon { flex-shrink: 0; width: 44px; height: 44px; background-color: var(--primary-green); border-radius: 50%; display: flex; justify-content: center; align-items: center; }
+.benefit-icon img { width: 24px; height: 24px; }
+.benefit-header h4 { font-size: 1.25rem; color: var(--dark-text); }
+.benefit-card p { line-height: 1.7; padding-left: 54px; color: var(--light-text); }
+.sub-benefit { margin-top: 1rem; margin-left: 54px; background-color: #EBF8F0; border-left: 4px solid var(--primary-green); padding: 0.8rem 1rem; border-radius: 0 8px 8px 0; }
+.sub-benefit p { padding-left: 0; font-size: 0.9rem; color: #065F46; }
+.sub-benefit p strong { color: #047857; }
 
 
 /* --------------------------------------------------------------------------
-   [7] POPUP DE E-MAIL
+   [7] POPUP DE E-MAIL E TABELA
    -------------------------------------------------------------------------- */
 .popup-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 2000; }
 .popup-overlay.active { display: flex; }
 .popup-content { background-color: var(--primary-white); padding: 2.5rem; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); width: 90%; max-width: 450px; position: relative; text-align: center; }
+.popup-content.large { max-width: 800px; }
 .popup-close { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: #aaa; background: none; border: none; cursor: pointer; }
-.popup-content h4 { color: var(--dark-text); font-size: 1.5rem; margin-bottom: 0.5rem; }
-.popup-content p { margin-bottom: 1.5rem; }
-#email-form input { width: 100%; padding: 0.8rem; margin-bottom: 1rem; border: 1px solid var(--border-color); border-radius: 8px; }
-#email-form .cta-button { background-color: var(--primary-blue); }
+.table-container { max-height: 400px; overflow-y: auto; margin: 1.5rem 0; border: 1px solid var(--border-color); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+thead th { background-color: var(--light-blue-bg); position: sticky; top: 0; }
+tbody tr:nth-child(even) { background-color: #F8F9FA; }
+.table-footer-text { text-align: center; color: var(--light-text); font-style: italic; }
+.popup-actions { display: flex; gap: 1rem; margin-top: 1.5rem; justify-content: flex-end; }
+.popup-actions .action-button { flex: none; width: auto; }
 
 
 /* --------------------------------------------------------------------------
@@ -331,11 +262,7 @@ body {
     .simulator-container { flex-direction: column; }
     .calculator-results { min-height: auto; }
     .benefits-grid { grid-template-columns: 1fr; }
-    /* --- Regra de responsividade para a nova seção --- */
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 3rem;
-    }
+    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem; }
 }
 
 @media (max-width: 768px) {
@@ -345,8 +272,5 @@ body {
     .hero-title { font-size: 2.5rem; }
     .hero-subtitle { font-size: 1.1rem; }
     .comparison-grid { grid-template-columns: 1fr; }
-    /* --- Regra de responsividade para a nova seção --- */
-    .features-grid {
-        grid-template-columns: 1fr;
-    }
+    .features-grid { grid-template-columns: 1fr; }
 }
