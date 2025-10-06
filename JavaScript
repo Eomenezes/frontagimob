@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const prevButton = document.querySelector('.carousel-button.prev');
         const nextButton = document.querySelector('.carousel-button.next');
 
-        if (slides.length > 0) {
+        if (slides.length > 0 && prevButton && nextButton) {
             const slideWidth = slides[0].getBoundingClientRect().width;
 
             const goToSlide = (targetIndex) => {
@@ -39,9 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const currentSlide = track.querySelector('.active');
                 if (currentSlide) currentSlide.classList.remove('active');
                 slides[targetIndex].classList.add('active');
+
                 const currentDot = document.querySelector('.carousel-pagination .active');
                 if (currentDot) currentDot.classList.remove('active');
-                dots[targetIndex].classList.add('active');
+                if (dots[targetIndex]) dots[targetIndex].classList.add('active');
+
                 prevButton.disabled = (targetIndex === 0);
                 nextButton.disabled = (targetIndex === slides.length - 1);
             };
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dots.forEach(dot => {
                 dot.addEventListener('click', e => {
                     const targetIndex = parseInt(e.target.dataset.slide);
-                    goToSlide(targetIndex);
+                    if (!isNaN(targetIndex)) goToSlide(targetIndex);
                 });
             });
         }
@@ -74,7 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         const formatCurrencyInput = (input) => {
             let value = input.value.replace(/\D/g, '');
-            if (value === '') { input.value = ''; return; }
+            if (value === '') {
+                input.value = '';
+                return;
+            }
             input.value = new Intl.NumberFormat('pt-BR').format(value);
         };
 
@@ -84,8 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const incluirParticipanteCheckbox = document.getElementById('incluir-participante');
         const conjugeField = document.querySelector('.conjuge-field');
         const resultadoDiv = document.getElementById('resultado-simulacao');
-        const resultsPlaceholder = resultadoDiv.querySelector('.results-placeholder');
-        const resultsContent = resultadoDiv.querySelector('.results-content');
+        const resultsPlaceholder = resultadoDiv?.querySelector('.results-placeholder');
+        const resultsContent = resultadoDiv?.querySelector('.results-content');
         const resultadoSAC = document.getElementById('resultado-sac');
         const resultadoPrice = document.getElementById('resultado-price');
         const btnBaixarPDF = document.getElementById('btn-baixar-pdf');
@@ -94,11 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailForm = document.getElementById('email-form');
         const popupCloseBtn = document.querySelector('.popup-close');
 
-        incluirParticipanteCheckbox.addEventListener('change', () => {
-            conjugeField.classList.toggle('hidden');
-        });
+        if (incluirParticipanteCheckbox && conjugeField) {
+            incluirParticipanteCheckbox.addEventListener('change', () => {
+                conjugeField.classList.toggle('hidden');
+            });
+        }
 
-        const parseCurrency = (value) => (typeof value === 'string' ? Number(value.replace(/\D/g, '')) || 0 : 0);
+        const parseCurrency = (value) =>
+            (typeof value === 'string' ? Number(value.replace(/\D/g, '')) || 0 : 0);
 
         /* === Envio dos dados para o backend === */
         form.addEventListener('submit', (e) => {
@@ -113,34 +121,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 rendaConjuge: parseCurrency(document.getElementById('renda-conjuge').value)
             };
 
-            const urlDoBackend = 'http://localhost8080/agimob/simulacao'; // troque pela URL real
+            // Corrigido: faltava ":" após localhost
+            const urlDoBackend = 'http://localhost:8080/agimob/simulacao'; // troque pela URL real
             const submitButton = form.querySelector('.cta-button');
-            submitButton.textContent = 'Calculando...';
-            submitButton.disabled = true;
+            if (submitButton) {
+                submitButton.textContent = 'Calculando...';
+                submitButton.disabled = true;
+            }
 
             fetch(urlDoBackend, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dadosParaEnviar)
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Erro ao processar a simulação.');
-                return response.json();
-            })
-            .then(resultados => {
-                preencherDados('sac', resultados.sac);
-                preencherDados('price', resultados.price);
-                resultsPlaceholder.classList.remove('active');
-                resultsContent.classList.add('active');
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Não foi possível conectar ao servidor. Tente novamente.');
-            })
-            .finally(() => {
-                submitButton.textContent = 'Calcular Financiamento';
-                submitButton.disabled = false;
-            });
+                .then(response => {
+                    if (!response.ok) throw new Error('Erro ao processar a simulação.');
+                    return response.json();
+                })
+                .then(resultados => {
+                    preencherDados('sac', resultados.sac);
+                    preencherDados('price', resultados.price);
+                    if (resultsPlaceholder) resultsPlaceholder.classList.remove('active');
+                    if (resultsContent) resultsContent.classList.add('active');
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Não foi possível conectar ao servidor. Tente novamente.');
+                })
+                .finally(() => {
+                    if (submitButton) {
+                        submitButton.textContent = 'Calcular Financiamento';
+                        submitButton.disabled = false;
+                    }
+                });
         });
 
         /* === Função de preenchimento === */
@@ -151,28 +164,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('sac-ultima-parcela').textContent = data.ultimaParcela;
                 document.getElementById('sac-total-juros').textContent = data.totalJuros;
                 document.getElementById('sac-total-pago').textContent = data.totalPago;
-                resultadoSAC.style.display = 'block';
+                if (resultadoSAC) resultadoSAC.style.display = 'block';
             }
             if (sistema === 'price') {
                 document.getElementById('price-parcela-fixa').textContent = data.parcelaFixa;
                 document.getElementById('price-total-juros').textContent = data.totalJuros;
                 document.getElementById('price-total-pago').textContent = data.totalPago;
-                resultadoPrice.style.display = 'block';
+                if (resultadoPrice) resultadoPrice.style.display = 'block';
             }
         };
 
         /* === PDF e Popup === */
-        const togglePopup = () => emailPopup.classList.toggle('active');
-        btnEnviarEmail.addEventListener('click', togglePopup);
-        popupCloseBtn.addEventListener('click', togglePopup);
-        emailPopup.addEventListener('click', (e) => { if (e.target === emailPopup) togglePopup(); });
-        emailForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email-input').value;
-            alert(`Simulação enviada para ${email} (modo demonstração).`);
-            togglePopup();
-            emailForm.reset();
-        });
+        const togglePopup = () => {
+            if (emailPopup) emailPopup.classList.toggle('active');
+        };
+
+        if (btnEnviarEmail) btnEnviarEmail.addEventListener('click', togglePopup);
+        if (popupCloseBtn) popupCloseBtn.addEventListener('click', togglePopup);
+        if (emailPopup) {
+            emailPopup.addEventListener('click', (e) => {
+                if (e.target === emailPopup) togglePopup();
+            });
+        }
+        if (emailForm) {
+            emailForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email-input').value;
+                alert(`Simulação enviada para ${email} (modo demonstração).`);
+                togglePopup();
+                emailForm.reset();
+            });
+        }
     }
 
 }); // fim do DOMContentLoaded
