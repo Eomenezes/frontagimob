@@ -1,0 +1,205 @@
+/* ==========================================================================
+   ARQUIVO DE SCRIPTS - AGIMOB
+   ==========================================================================
+   Autor: Gemini (para Kai)
+   Descrição: Versão final completa com todas as funcionalidades e o
+   novo design da calculadora.
+   ========================================================================== */
+'use strict';
+
+// Executa o script apenas quando o DOM (a página) estiver completamente carregado.
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* --------------------------------------------------------------------------
+       [1] LÓGICA DA NAVBAR
+       -------------------------------------------------------------------------- */
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-menu");
+    if (hamburger && navMenu) {
+        const navLinks = document.querySelectorAll(".nav-link");
+        const toggleMobileMenu = () => {
+            hamburger.classList.toggle("active");
+            navMenu.classList.toggle("active");
+        };
+        const closeMobileMenu = () => {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        };
+        hamburger.addEventListener("click", toggleMobileMenu);
+        navLinks.forEach(link => link.addEventListener("click", closeMobileMenu));
+    }
+
+
+    /* --------------------------------------------------------------------------
+       [2] LÓGICA DO CARROSSEL
+       -------------------------------------------------------------------------- */
+    const track = document.querySelector('.carousel-track');
+    if (track) {
+        const slides = Array.from(track.children);
+        const dots = document.querySelectorAll('.carousel-pagination .dot');
+        const prevButton = document.querySelector('.carousel-button.prev');
+        const nextButton = document.querySelector('.carousel-button.next');
+
+        if (slides.length > 0) {
+            const slideWidth = slides[0].getBoundingClientRect().width;
+
+            const goToSlide = (targetIndex) => {
+                const offset = slideWidth * targetIndex;
+                track.style.transform = `translateX(-${offset}px)`;
+                const currentSlide = track.querySelector('.active');
+                if (currentSlide) currentSlide.classList.remove('active');
+                slides[targetIndex].classList.add('active');
+                const currentDot = document.querySelector('.carousel-pagination .active');
+                if (currentDot) currentDot.classList.remove('active');
+                dots[targetIndex].classList.add('active');
+                prevButton.disabled = (targetIndex === 0);
+                nextButton.disabled = (targetIndex === slides.length - 1);
+            };
+
+            nextButton.addEventListener('click', () => {
+                const currentSlide = track.querySelector('.active');
+                const currentIndex = slides.findIndex(slide => slide === currentSlide);
+                const nextIndex = currentIndex + 1;
+                if (nextIndex < slides.length) goToSlide(nextIndex);
+            });
+
+            prevButton.addEventListener('click', () => {
+                const currentSlide = track.querySelector('.active');
+                const currentIndex = slides.findIndex(slide => slide === currentSlide);
+                const prevIndex = currentIndex - 1;
+                if (prevIndex >= 0) goToSlide(prevIndex);
+            });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', e => {
+                    const targetIndex = parseInt(e.target.dataset.slide);
+                    goToSlide(targetIndex);
+                });
+            });
+        }
+    }
+
+
+    /* --------------------------------------------------------------------------
+       [3] LÓGICA DA CALCULADORA (NOVO DESIGN)
+       -------------------------------------------------------------------------- */
+    const form = document.getElementById('financing-form');
+    if (form) {
+        // --- FORMATAÇÃO AUTOMÁTICA DE INPUTS DE VALOR ---
+        const formatCurrencyInput = (input) => {
+            let value = input.value.replace(/\D/g, '');
+            if (value === '') { input.value = ''; return; }
+            input.value = new Intl.NumberFormat('pt-BR').format(value);
+        };
+        const currencyInputs = document.querySelectorAll('#valor-imovel, #valor-entrada, #renda-bruta, #renda-conjuge');
+        currencyInputs.forEach(input => {
+            input.addEventListener('input', () => formatCurrencyInput(input));
+        });
+
+        // --- LÓGICA DE CÁLCULO, PDF E POPUP DE EMAIL ---
+        const incluirParticipanteCheckbox = document.getElementById('incluir-participante');
+        const conjugeField = document.querySelector('.conjuge-field');
+        const resultadoDiv = document.getElementById('resultado-simulacao');
+        // ATUALIZAÇÃO: Seleciona os novos elementos de placeholder e conteúdo
+        const resultsPlaceholder = resultadoDiv.querySelector('.results-placeholder');
+        const resultsContent = resultadoDiv.querySelector('.results-content');
+        const resultadoSAC = document.getElementById('resultado-sac');
+        const resultadoPrice = document.getElementById('resultado-price');
+        const btnBaixarPDF = document.getElementById('btn-baixar-pdf');
+        const btnEnviarEmail = document.getElementById('btn-enviar-email');
+        const emailPopup = document.getElementById('email-popup');
+        const emailForm = document.getElementById('email-form');
+        const popupCloseBtn = document.querySelector('.popup-close');
+        let dadosSimulacao = {};
+
+        const parseCurrency = (value) => (typeof value === 'string' ? Number(value.replace(/\D/g, '')) || 0 : 0);
+        const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+
+        incluirParticipanteCheckbox.addEventListener('change', () => {
+            conjugeField.classList.toggle('hidden');
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const valorImovel = parseCurrency(document.getElementById('valor-imovel').value);
+            const valorEntrada = parseCurrency(document.getElementById('valor-entrada').value);
+            const valorFinanciamento = valorImovel - valorEntrada;
+            const prazoAnos = parseInt(document.getElementById('prazo-anos').value) || 0;
+            const prazoMeses = prazoAnos * 12;
+            const modalidade = document.getElementById('modalidade').value;
+            const taxaJurosAnual = 9.5 / 100;
+            const taxaJurosMensal = Math.pow(1 + taxaJurosAnual, 1 / 12) - 1;
+            dadosSimulacao = { valorFinanciamento: formatCurrency(valorFinanciamento), prazo: `${prazoAnos} anos` };
+            
+            // ATUALIZAÇÃO: Esconde o placeholder e mostra a área de conteúdo dos resultados
+            resultsPlaceholder.classList.remove('active');
+            resultsContent.classList.add('active');
+            
+            resultadoSAC.style.display = 'none';
+            resultadoPrice.style.display = 'none';
+
+            if ((modalidade === 'sac' || modalidade === 'ambas') && prazoMeses > 0) {
+                const amortizacao = valorFinanciamento / prazoMeses;
+                const primeiraParcela = amortizacao + (valorFinanciamento * taxaJurosMensal);
+                const ultimaParcela = amortizacao + (amortizacao * taxaJurosMensal);
+                const totalPago = ((primeiraParcela + ultimaParcela) / 2) * prazoMeses;
+                dadosSimulacao.sac = { primeiraParcela: formatCurrency(primeiraParcela), ultimaParcela: formatCurrency(ultimaParcela), totalJuros: formatCurrency(totalPago - valorFinanciamento), totalPago: formatCurrency(totalPago) };
+                document.getElementById('sac-primeira-parcela').textContent = dadosSimulacao.sac.primeiraParcela;
+                document.getElementById('sac-ultima-parcela').textContent = dadosSimulacao.sac.ultimaParcela;
+                document.getElementById('sac-total-juros').textContent = dadosSimulacao.sac.totalJuros;
+                document.getElementById('sac-total-pago').textContent = dadosSimulacao.sac.totalPago;
+                resultadoSAC.style.display = 'block';
+            }
+
+            if ((modalidade === 'price' || modalidade === 'ambas') && prazoMeses > 0) {
+                const i = taxaJurosMensal, n = prazoMeses;
+                const parcelaFixa = valorFinanciamento * ((i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1));
+                const totalPago = parcelaFixa * prazoMeses;
+                dadosSimulacao.price = { parcelaFixa: formatCurrency(parcelaFixa), totalJuros: formatCurrency(totalPago - valorFinanciamento), totalPago: formatCurrency(totalPago) };
+                document.getElementById('price-parcela-fixa').textContent = dadosSimulacao.price.parcelaFixa;
+                document.getElementById('price-total-juros').textContent = dadosSimulacao.price.totalJuros;
+                document.getElementById('price-total-pago').textContent = dadosSimulacao.price.totalPago;
+                resultadoPrice.style.display = 'block';
+            }
+        });
+
+        btnBaixarPDF.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFontSize(20);
+            doc.text("Simulação de Financiamento - AGIMOB", 10, 20);
+            doc.setFontSize(12);
+            doc.text(`Valor Financiado: ${dadosSimulacao.valorFinanciamento || 'N/A'}`, 10, 30);
+            doc.text(`Prazo: ${dadosSimulacao.prazo || 'N/A'}`, 10, 40);
+            let linha = 55;
+            if (dadosSimulacao.sac) {
+                doc.setFontSize(16); doc.text("Sistema SAC", 10, linha);
+                doc.setFontSize(12);
+                doc.text(`Primeira Parcela: ${dadosSimulacao.sac.primeiraParcela}`, 10, linha + 10);
+                doc.text(`Última Parcela: ${dadosSimulacao.sac.ultimaParcela}`, 10, linha + 20);
+                doc.text(`Total Pago: ${dadosSimulacao.sac.totalPago}`, 10, linha + 30);
+                linha += 50;
+            }
+            if (dadosSimulacao.price) {
+                doc.setFontSize(16); doc.text("Tabela Price", 10, linha);
+                doc.setFontSize(12);
+                doc.text(`Parcela Fixa: ${dadosSimulacao.price.parcelaFixa}`, 10, linha + 10);
+                doc.text(`Total Pago: ${dadosSimulacao.price.totalPago}`, 10, linha + 20);
+            }
+            doc.save('simulacao-agimob.pdf');
+        });
+
+        const togglePopup = () => emailPopup.classList.toggle('active');
+        btnEnviarEmail.addEventListener('click', togglePopup);
+        popupCloseBtn.addEventListener('click', togglePopup);
+        emailPopup.addEventListener('click', (e) => { if (e.target === emailPopup) togglePopup(); });
+        emailForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value;
+            alert(`Simulação enviada para ${email}!\n(Isso é uma demonstração. Um backend é necessário para o envio real.)`);
+            togglePopup();
+            emailForm.reset();
+        });
+    }
+
+}); // Fim do DOMContentLoaded
