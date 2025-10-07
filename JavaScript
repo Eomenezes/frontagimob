@@ -109,92 +109,100 @@ document.addEventListener('DOMContentLoaded', () => {
             (typeof value === 'string' ? Number(value.replace(/\D/g, '')) || 0 : 0);
 
         /* === Envio dos dados para o backend === */
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-            const dadosParaEnviar = {
-                valorImovel: parseCurrency(document.getElementById('valor-imovel').value),
-                valorEntrada: parseCurrency(document.getElementById('valor-entrada').value),
-                prazoAnos: parseInt(document.getElementById('prazo-anos').value) || 0,
-                rendaBruta: parseCurrency(document.getElementById('renda-bruta').value),
-                incluirParticipante: document.getElementById('incluir-participante').checked,
-                rendaConjuge: parseCurrency(document.getElementById('renda-conjuge').value)
-            };
+    const dadosParaEnviar = {
+        valorImovel: parseCurrency(document.getElementById('valor-imovel').value),
+        valorEntrada: parseCurrency(document.getElementById('valor-entrada').value),
+        prazoAnos: parseInt(document.getElementById('prazo-anos').value) || 0,
+        rendaBruta: parseCurrency(document.getElementById('renda-bruta').value),
+        incluirParticipante: document.getElementById('incluir-participante').checked,
+        rendaConjuge: parseCurrency(document.getElementById('renda-conjuge').value),
+        tipo: document.getElementById('modalidade').value
+    };
 
-            // Corrigido: faltava ":" após localhost
-            const urlDoBackend = 'http://localhost:8080/agimob/simulacao'; // troque pela URL real
-            const submitButton = form.querySelector('.cta-button');
-            if (submitButton) {
-                submitButton.textContent = 'Calculando...';
-                submitButton.disabled = true;
-            }
-
-            fetch(urlDoBackend, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dadosParaEnviar)
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('Erro ao processar a simulação.');
-                    return response.json();
-                })
-                .then(resultados => {
-                    preencherDados('sac', resultados.sac);
-                    preencherDados('price', resultados.price);
-                    if (resultsPlaceholder) resultsPlaceholder.classList.remove('active');
-                    if (resultsContent) resultsContent.classList.add('active');
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Não foi possível conectar ao servidor. Tente novamente.');
-                })
-                .finally(() => {
-                    if (submitButton) {
-                        submitButton.textContent = 'Calcular Financiamento';
-                        submitButton.disabled = false;
-                    }
-                });
-        });
-
-        /* === Função de preenchimento === */
-        const preencherDados = (sistema, data) => {
-            if (!data) return;
-            if (sistema === 'sac') {
-                document.getElementById('sac-primeira-parcela').textContent = data.primeiraParcela;
-                document.getElementById('sac-ultima-parcela').textContent = data.ultimaParcela;
-                document.getElementById('sac-total-juros').textContent = data.totalJuros;
-                document.getElementById('sac-total-pago').textContent = data.totalPago;
-                if (resultadoSAC) resultadoSAC.style.display = 'block';
-            }
-            if (sistema === 'price') {
-                document.getElementById('price-parcela-fixa').textContent = data.parcelaFixa;
-                document.getElementById('price-total-juros').textContent = data.totalJuros;
-                document.getElementById('price-total-pago').textContent = data.totalPago;
-                if (resultadoPrice) resultadoPrice.style.display = 'block';
-            }
-        };
-
-        /* === PDF e Popup === */
-        const togglePopup = () => {
-            if (emailPopup) emailPopup.classList.toggle('active');
-        };
-
-        if (btnEnviarEmail) btnEnviarEmail.addEventListener('click', togglePopup);
-        if (popupCloseBtn) popupCloseBtn.addEventListener('click', togglePopup);
-        if (emailPopup) {
-            emailPopup.addEventListener('click', (e) => {
-                if (e.target === emailPopup) togglePopup();
-            });
-        }
-        if (emailForm) {
-            emailForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('email-input').value;
-                alert(`Simulação enviada para ${email} (modo demonstração).`);
-                togglePopup();
-                emailForm.reset();
-            });
-        }
+    const urlDoBackend = 'http://localhost:8080/agimob/simulacao'; 
+    const submitButton = form.querySelector('.cta-button');
+    if (submitButton) {
+        submitButton.textContent = 'Calculando...';
+        submitButton.disabled = true;
     }
 
+    // Esconde os resultados antigos e mostra a mensagem de "carregando"
+    if (resultsContent) resultsContent.classList.remove('active');
+    if (resultsPlaceholder) resultsPlaceholder.classList.add('active');
+
+
+    fetch(urlDoBackend, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dadosParaEnviar)
+    })
+    .then(response => {
+        if (!response.ok) {
+            // Se a resposta não for OK, lança um erro para cair no .catch()
+            throw new Error('Erro na resposta do servidor. Status: ' + response.status);
+        }
+        return response.json(); // Converte a resposta para JSON
+    })
+    .then(resultados => {
+        // --- INÍCIO DA ATUALIZAÇÃO ---
+        
+        // 1. Adicione um log para ver o que o backend retornou
+        console.log("Dados recebidos do backend:", resultados);
+
+        // 2. Chama a função para preencher os dados da tabela SAC
+        //    É crucial que o backend retorne um objeto com a chave "sac"
+        preencherDados('sac', resultados.sac);
+
+        // 3. Chama a função para preencher os dados da tabela Price
+        //    É crucial que o backend retorne um objeto com a chave "price"
+        preencherDados('price', resultados.price);
+
+        // 4. Esconde a mensagem de placeholder e exibe a div com os resultados
+        if (resultsPlaceholder) resultsPlaceholder.classList.remove('active');
+        if (resultsContent) resultsContent.classList.add('active');
+
+        // --- FIM DA ATUALIZAÇÃO ---
+    })
+    .catch(error => {
+        console.error('Ocorreu um erro na simulação:', error);
+        alert('Não foi possível obter a simulação. Verifique o console para mais detalhes.');
+    })
+    .finally(() => {
+        // Este bloco sempre executa, com sucesso ou erro
+        if (submitButton) {
+            submitButton.textContent = 'Calcular Financiamento';
+            submitButton.disabled = false;
+        }
+    });
+});
+
+/* === Função de preenchimento === */
+const preencherDados = (sistema, data) => {
+    // Se não houver dados para um sistema (ex: backend só retornou SAC), não faz nada
+    if (!data) return;
+
+    // Converte os valores numéricos para o formato de moeda brasileiro
+    const formatarMoeda = (valor) => 
+        new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor);
+
+    if (sistema === 'sac') {
+        // Certifique-se que os IDs no HTML correspondem exatamente a estes abaixo
+        document.getElementById('sac-primeira-parcela').textContent = formatarMoeda(data.primeiraParcela);
+        document.getElementById('sac-ultima-parcela').textContent = formatarMoeda(data.ultimaParcela);
+        document.getElementById('sac-total-juros').textContent = formatarMoeda(data.totalJuros);
+        document.getElementById('sac-total-pago').textContent = formatarMoeda(data.totalPago);
+        if (resultadoSAC) resultadoSAC.style.display = 'block'; // Garante que a tabela seja exibida
+    }
+    
+    if (sistema === 'price') {
+        // Certifique-se que os IDs no HTML correspondem exatamente a estes abaixo
+        document.getElementById('price-parcela-fixa').textContent = formatarMoeda(data.parcelaFixa);
+        document.getElementById('price-total-juros').textContent = formatarMoeda(data.totalJuros);
+        document.getElementById('price-total-pago').textContent = formatarMoeda(data.totalPago);
+        if (resultadoPrice) resultadoPrice.style.display = 'block'; // Garante que a tabela seja exibida
+    }
+};
 }); // fim do DOMContentLoaded
