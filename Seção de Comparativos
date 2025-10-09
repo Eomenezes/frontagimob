@@ -1,0 +1,158 @@
+<section id="comparativo-financiamento">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title" style="color: var(--primary-white);">Comparativo de Taxas de Mercado</h2>
+            <p class="section-subtitle" style="color: #E0E0E0;">Simulação para um financiamento de R$ 200.000,00 em 45 anos.</p>
+        </div>
+    </div>
+    <div class="comparison-card">
+        <div class="card-header">
+            <div class="icon">🏦</div>
+            <h2>Sistema SAC - Parcelas Decrescentes</h2>
+            <p>Comparação de taxas entre bancos no Sistema de Amortização Constante</p>
+        </div>
+        <div class="table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Banco</th>
+                        <th>Taxa a.a.</th>
+                        <th>1ª Parcela</th>
+                        <th>Última Parcela</th>
+                        <th>Total de Juros</th>
+                        <th>Total Pago</th>
+                        <th>% da Renda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td data-label="Banco">ADMOB <span class="best-rate-badge">Melhor Taxa</span></td>
+                        <td data-label="Taxa a.a.">9.0%</td>
+                        <td data-label="1ª Parcela">R$ 2.470,48</td>
+                        <td data-label="Última Parcela">R$ 485,09</td>
+                        <td data-label="Total de Juros">R$ 327.475,00</td>
+                        <td data-label="Total Pago">R$ 787.475,00</td>
+                        <td data-label="% da Renda">20.3%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Banco do Brasil</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="1ª Parcela">R$ 3.000,48</td>
+                        <td data-label="Última Parcela">R$ 485,30</td>
+                        <td data-label="Total de Juros">R$ 703.300,00</td>
+                        <td data-label="Total Pago">R$ 953.300,00</td>
+                        <td data-label="% da Renda">25.7%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Caixa Econômica</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="1ª Parcela">R$ 3.000,48</td>
+                        <td data-label="Última Parcela">R$ 485,30</td>
+                        <td data-label="Total de Juros">R$ 703.300,00</td>
+                        <td data-label="Total Pago">R$ 953.300,00</td>
+                        <td data-label="% da Renda">25.7%</td>
+                    </tr>
+                     <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Itaú</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="1ª Parcela">R$ 3.000,48</td>
+                        <td data-label="Última Parcela">R$ 485,30</td>
+                        <td data-label="Total de Juros">R$ 703.300,00</td>
+                        <td data-label="Total Pago">R$ 953.300,00</td>
+                        <td data-label="% da Renda">25.7%</td>
+                    </tr>
+                     <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Bradesco</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="1ª Parcela">R$ 3.000,48</td>
+                        <td data-label="Última Parcela">R$ 485,30</td>
+                        <td data-label="Total de Juros">R$ 703.300,00</td>
+                        <td data-label="Total Pago">R$ 953.300,00</td>
+                        <td data-label="% da Renda">25.7%</td>
+                    </tr>
+                     <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Santander</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="1ª Parcela">R$ 3.000,48</td>
+                        <td data-label="Última Parcela">R$ 485,30</td>
+                        <td data-label="Total de Juros">R$ 703.300,00</td>
+                        <td data-label="Total Pago">R$ 953.300,00</td>
+                        <td data-label="% da Renda">25.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="comparison-card">
+        <div class="card-header">
+            <div class="icon">💰</div>
+            <h2>Sistema PRICE - Parcelas Fixas</h2>
+            <p>Comparação de taxas entre bancos no Sistema de Parcelas Fixas</p>
+        </div>
+        <div class="table-wrapper">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Banco</th>
+                        <th>Taxa a.a.</th>
+                        <th>Parcela Fixa</th>
+                        <th>Total de Juros</th>
+                        <th>Total Pago</th>
+                        <th>% da Renda</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight-row">
+                        <td data-label="Banco">ADMOB <span class="best-rate-badge">Melhor Taxa</span></td>
+                        <td data-label="Taxa a.a.">9.0%</td>
+                        <td data-label="Parcela Fixa">R$ 1.985,11</td>
+                        <td data-label="Total de Juros">R$ 811.950,47</td>
+                        <td data-label="Total Pago">R$ 1.071.950,47</td>
+                        <td data-label="% da Renda">16.5%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Banco do Brasil</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="Parcela Fixa">R$ 2.902,12</td>
+                        <td data-label="Total de Juros">R$ 1.150.544,02</td>
+                        <td data-label="Total Pago">R$ 1.410.544,02</td>
+                        <td data-label="% da Renda">21.8%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Caixa Econômica</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="Parcela Fixa">R$ 2.902,12</td>
+                        <td data-label="Total de Juros">R$ 1.150.544,02</td>
+                        <td data-label="Total Pago">R$ 1.410.544,02</td>
+                        <td data-label="% da Renda">21.8%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Itaú</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="Parcela Fixa">R$ 2.902,12</td>
+                        <td data-label="Total de Juros">R$ 1.150.544,02</td>
+                        <td data-label="Total Pago">R$ 1.410.544,02</td>
+                        <td data-label="% da Renda">21.8%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Bradesco</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="Parcela Fixa">R$ 2.902,12</td>
+                        <td data-label="Total de Juros">R$ 1.150.544,02</td>
+                        <td data-label="Total Pago">R$ 1.410.544,02</td>
+                        <td data-label="% da Renda">21.8%</td>
+                    </tr>
+                    <tr>
+                        <td data-label="Banco"><span class="banco-desfocado">Santander</span></td>
+                        <td data-label="Taxa a.a.">12.0%</td>
+                        <td data-label="Parcela Fixa">R$ 2.902,12</td>
+                        <td data-label="Total de Juros">R$ 1.150.544,02</td>
+                        <td data-label="Total Pago">R$ 1.410.544,02</td>
+                        <td data-label="% da Renda">21.8%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
